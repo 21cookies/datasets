@@ -1,0 +1,172 @@
+#a) Implement the Find-S algorithm on the data sets provided to you to induce hypotheses from training data
+
+# ---------------------------
+# Find-S Algorithm in Python
+# ---------------------------
+
+import pandas as pd
+
+# Sample dataset (EnjoySport)
+data = [
+    ['Sunny', 'Warm', 'Normal', 'Strong', 'Warm', 'Same', 'Yes'],
+    ['Sunny', 'Warm', 'High', 'Strong', 'Warm', 'Same', 'Yes'],
+    ['Sunny', 'Warm', 'High', 'Strong', 'Cold', 'Change', 'No'],
+    ['Sunny', 'Warm', 'Normal', 'Strong', 'Cold', 'Change', 'Yes']
+]
+
+# Define column names
+columns = ['Sky', 'AirTemp', 'Humidity', 'Wind', 'Water', 'Forecast', 'EnjoySport']
+
+# Create DataFrame
+df = pd.DataFrame(data, columns=columns)
+
+# ---------------------------
+# Find-S Algorithm Function
+# ---------------------------
+
+def find_s(training_df, target_col='EnjoySport', positive_label='Yes'):
+    attributes = training_df.columns[:-1]  # all columns except target
+    hypothesis = ['0'] * len(attributes)   # most specific hypothesis (initial)
+    
+    # Iterate through each training example
+    for i in range(len(training_df)):
+        if training_df.iloc[i][target_col] == positive_label:  # positive example
+            for j in range(len(attributes)):
+                if hypothesis[j] == '0':  # if attribute not yet set
+                    hypothesis[j] = training_df.iloc[i][j]
+                elif hypothesis[j] != training_df.iloc[i][j]:
+                    hypothesis[j] = '?'  # generalize if values differ
+    return hypothesis
+
+# ---------------------------
+# Run Find-S Algorithm
+# ---------------------------
+
+final_hypothesis = find_s(df)
+print("Final Hypothesis (Find-S):")
+print("<", ', '.join(final_hypothesis), ">")
+
+
+
+
+
+#b) Implement the Candidate Elimination (aka List-Then-Eliminate) algorithm on the data sets provided to you to list of all possible hypotheses and eliminating the ones that do not fit the training examples.
+
+# -------------------------------
+# Candidate Elimination Algorithm
+# -------------------------------
+
+import pandas as pd
+
+# Sample training dataset (EnjoySport)
+data = [
+    ['Sunny', 'Warm', 'Normal', 'Strong', 'Warm', 'Same', 'Yes'],
+    ['Sunny', 'Warm', 'High', 'Strong', 'Warm', 'Same', 'Yes'],
+    ['Rainy', 'Cold', 'High', 'Strong', 'Warm', 'Change', 'No'],
+    ['Sunny', 'Warm', 'High', 'Strong', 'Cold', 'Change', 'Yes']
+]
+
+# Define columns
+columns = ['Sky', 'AirTemp', 'Humidity', 'Wind', 'Water', 'Forecast', 'EnjoySport']
+df = pd.DataFrame(data, columns=columns)
+
+# -------------------------------
+# Candidate Elimination Function
+# -------------------------------
+
+def candidate_elimination(training_data):
+    # Get attributes and target
+    attributes = training_data.columns[:-1]
+    target = training_data.columns[-1]
+    
+    # Initialize S (Specific boundary) with first positive example
+    S = list(training_data[training_data[target] == 'Yes'].iloc[0, :-1])
+    
+    # Initialize G (General boundary) with most general hypothesis
+    G = [['?' for _ in range(len(S))]]
+    
+    # Iterate through training examples
+    for i, row in training_data.iterrows():
+        example, label = row[:-1], row[-1]
+        
+        if label == 'Yes':  # Positive example
+            # Remove inconsistent hypotheses from G
+            G = [g for g in G if consistent(g, example)]
+            
+            # Update S: make it more general if needed
+            for j in range(len(S)):
+                if S[j] != example[j]:
+                    S[j] = '?'
+                    
+        elif label == 'No':  # Negative example
+            # For each hypothesis in G
+            new_G = []
+            for g in G:
+                # If g is consistent with negative example, specialize it
+                if consistent(g, example):
+                    new_hypotheses = specialize(g, example, attributes, S)
+                    new_G.extend(new_hypotheses)
+                else:
+                    new_G.append(g)
+            G = remove_more_general(new_G)
+    
+    return S, G
+
+
+# -------------------------------
+# Helper Functions
+# -------------------------------
+
+def consistent(hypothesis, example):
+    """Check if hypothesis is consistent with example"""
+    return all(h == '?' or h == e for h, e in zip(hypothesis, example))
+
+def specialize(hypothesis, example, attributes, S):
+    """Generate specializations of a hypothesis that exclude the example"""
+    specializations = []
+    for i in range(len(hypothesis)):
+        if hypothesis[i] == '?':
+            for val in training_values(attributes[i]):
+                if val != example[i] and (S[i] == '?' or val == S[i]):
+                    new_h = hypothesis.copy()
+                    new_h[i] = val
+                    specializations.append(new_h)
+    return specializations
+
+def training_values(attr):
+    """Return possible values for a given attribute"""
+    values = {
+        'Sky': ['Sunny', 'Rainy'],
+        'AirTemp': ['Warm', 'Cold'],
+        'Humidity': ['High', 'Normal'],
+        'Wind': ['Strong', 'Weak'],
+        'Water': ['Warm', 'Cold'],
+        'Forecast': ['Same', 'Change']
+    }
+    return values[attr]
+
+def remove_more_general(hypotheses):
+    """Remove hypotheses that are more general than others"""
+    final_list = []
+    for h in hypotheses:
+        if not any(more_general(h2, h) for h2 in hypotheses if h != h2):
+            final_list.append(h)
+    return final_list
+
+def more_general(h1, h2):
+    """Check if h1 is more general than h2"""
+    return all(h1[i] == '?' or h1[i] == h2[i] for i in range(len(h1)))
+
+
+# -------------------------------
+# Run the Algorithm
+# -------------------------------
+
+S, G = candidate_elimination(df)
+
+print("\nFinal Specific Hypothesis (S):")
+print("<", ', '.join(S), ">")
+
+print("\nFinal General Hypotheses (G):")
+for g in G:
+    print("<", ', '.join(g), ">")
