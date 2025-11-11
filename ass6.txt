@@ -1,0 +1,350 @@
+#1. Design and implement the naïve Bayes classifier using the data set available at /kaggle/input/adult-dataset/adult.csv that has 15 attributes, segregate the dataset into categorical and numerical variables. Income is the target variable.
+#a) Check for missing values, output a frequency count of the categorical variables and view frequency distribution of categorical variables.
+#b) Check for missing values in workclass, occupation and native_country (replace ? with NaN).
+#c) Check labels in workclass variable, check frequency distribution of values in workclass variable. Do the same for other two variables of (c)
+#d) Print categorical variables with missing data and impute missing categorical variables with most frequent value
+#e) Explore the numerical variables and problems in them (is null, sum etc)
+#f) Declare the feature variables and target variable.
+#g) Split the data set for train and test purpose, and make sure there are no missing values
+#h) Use one-hot encoding to encode 'workclass', 'education', 'marital_status', 'occupation', 'relationship', 'race', 'sex', 'native_country'
+#i) Do a feature Scaling- use RobustScaler form sklearn to transform the training and testing features (learning and test data)
+#j) Fit the GaussianNB model to the training data
+#k) Use the above to predict the income for the test data.
+#l) Print model accuracy
+#m) Check for over fitting and under fitting
+#n) Compare model accuracy with null accuracy to find out how good the NB model was.
+#o) Also print the confusion matrix to show number of correct predictions and incorrect
+#p) Print classification report using classification_report from sklearn.metrics for precision, recall, f1 and support
+
+# 📘 Naive Bayes Classifier using Adult Dataset
+# Simple and easy-to-understand implementation
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, RobustScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+# ---------------------------
+# Step 1: Load the dataset
+# ---------------------------
+df = pd.read_csv("adult.csv")
+
+# ---------------------------
+# Step 2: Check missing values and replace '?' with NaN
+# ---------------------------
+df.replace('?', np.nan, inplace=True)
+
+# Show missing value count
+print("Missing values in each column:\n", df.isnull().sum())
+
+# ---------------------------
+# Step 3: Replace missing values with most frequent (mode)
+# ---------------------------
+df.fillna(df.mode().iloc[0], inplace=True)
+
+# ---------------------------
+# Step 4: Separate features and target
+# ---------------------------
+X = df.drop('income', axis=1)
+y = df['income']
+
+# ---------------------------
+# Step 5: Identify categorical and numerical columns
+# ---------------------------
+categorical_cols = X.select_dtypes(include=['object']).columns
+numeric_cols = X.select_dtypes(exclude=['object']).columns
+
+print("\nCategorical Columns:\n", categorical_cols)
+print("\nNumerical Columns:\n", numeric_cols)
+
+# ---------------------------
+# Step 6: One-hot encoding for categorical variables
+# ---------------------------
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_cols),
+        ('num', 'passthrough', numeric_cols)
+    ]
+)
+
+X_processed = preprocessor.fit_transform(X)
+
+# ---------------------------
+# Step 7: Split dataset into train and test
+# ---------------------------
+X_train, X_test, y_train, y_test = train_test_split(
+    X_processed, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# ---------------------------
+# Step 8: Feature scaling using RobustScaler
+# ---------------------------
+scaler = RobustScaler(with_centering=False)
+X_train_scaled = scaler.fit_transform(X_train.toarray() if hasattr(X_train, "toarray") else X_train)
+X_test_scaled = scaler.transform(X_test.toarray() if hasattr(X_test, "toarray") else X_test)
+
+# ---------------------------
+# Step 9: Train Gaussian Naive Bayes Model
+# ---------------------------
+model = GaussianNB()
+model.fit(X_train_scaled, y_train)
+
+# ---------------------------
+# Step 10: Make predictions
+# ---------------------------
+y_pred = model.predict(X_test_scaled)
+
+# ---------------------------
+# Step 11: Model Evaluation
+# ---------------------------
+accuracy = accuracy_score(y_test, y_pred)
+print("\nModel Accuracy:", accuracy)
+
+# ---------------------------
+# Step 12: Overfitting / Underfitting check
+# ---------------------------
+train_acc = accuracy_score(y_train, model.predict(X_train_scaled))
+if train_acc - accuracy > 0.05:
+    print("Model may be Overfitting.")
+elif accuracy - train_acc > 0.05:
+    print("Model may be Underfitting.")
+else:
+    print("Model is well fitted.")
+
+# ---------------------------
+# Step 13: Null accuracy (baseline)
+# ---------------------------
+null_accuracy = y_test.value_counts().max() / len(y_test)
+print("\nNull Accuracy:", null_accuracy)
+
+# ---------------------------
+# Step 14: Confusion Matrix
+# ---------------------------
+cm = confusion_matrix(y_test, y_pred)
+print("\nConfusion Matrix:\n", cm)
+
+# ---------------------------
+# Step 15: Classification Report
+# ---------------------------
+print("\nClassification Report:\n")
+print(classification_report(y_test, y_pred))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#2. Design and implement a Multinomial Naive Bayes Classifier to classify documents into pre-defined types based on likelihood of a word occurring by using Bayes theorem. The data set shall be provided as a CSV. The dataset will be of text data categorized into four labels: Technology, Sports, Politics and Entertainment. Each entry contains a short sentence or statement related to a specific topic with the label indicating the category it belongs to. 
+
+# 📘 Multinomial Naive Bayes Text Classifier
+# Simple, short, and easy-to-understand
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score, classification_report
+
+# Step 1: Load dataset (CSV file with 'text' and 'label' columns)
+df = pd.read_csv("text_dataset.csv")   # Example: each row has 'text' and 'label'
+
+# Step 2: Split features (text) and target (label)
+X = df['text']
+y = df['label']
+
+# Step 3: Convert text to word counts (Bag of Words model)
+vectorizer = CountVectorizer()
+X_vectorized = vectorizer.fit_transform(X)
+
+# Step 4: Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(
+    X_vectorized, y, test_size=0.2, random_state=42
+)
+
+# Step 5: Train Multinomial Naive Bayes model
+model = MultinomialNB()
+model.fit(X_train, y_train)
+
+# Step 6: Make predictions
+y_pred = model.predict(X_test)
+
+# Step 7: Evaluate model
+print("✅ Model Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import pandas as pd
+
+df = pd.read_csv("loan_data.csv")
+print(df.columns)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 3. Implement the NB optimal classifier. Data set is given to you in class.
+# Import libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score
+
+# Step 1: Load dataset
+df = pd.read_csv("loan_data.csv")
+
+# Step 2: Split data into features and target
+X = df.drop('not.fully.paid', axis=1)
+y = df['not.fully.paid']
+
+# Step 3: Convert categorical column 'purpose' into numeric
+X = pd.get_dummies(X, drop_first=True)
+
+# Step 4: Split into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 5: Create and train the Naive Bayes model
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+# Step 6: Predict on test data
+y_pred = model.predict(X_test)
+
+# Step 7: Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("Naive Bayes Classifier Accuracy:", accuracy)
+
+
+
+
+

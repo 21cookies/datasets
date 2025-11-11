@@ -1,0 +1,169 @@
+#1. Predict Sugar of Diabetic Patient given BMI and Age using k-NN, assume k = 3
+
+# k-NN for Sugar Prediction
+
+import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
+
+# Dataset: [BMI, Age]
+X = np.array([
+    [33.6, 50],
+    [26.6, 30],
+    [23.4, 40],
+    [43.1, 67],
+    [35.3, 23],
+    [35.9, 67],
+    [36.7, 45],
+    [25.7, 46],
+    [23.3, 29],
+    [31.0, 56]
+])
+
+# Target: Sugar (1 = Diabetic, 0 = Non-Diabetic)
+y = np.array([1,0,0,0,1,1,1,0,0,1])
+
+# Create and train k-NN model
+knn = KNeighborsClassifier(n_neighbors=3)
+knn.fit(X, y)
+
+# New patient's data (BMI, Age)
+new_patient = np.array([[30, 40]])
+
+# Predict sugar level
+pred = knn.predict(new_patient)
+print("Predicted Sugar (1=Diabetic, 0=Non-Diabetic):", pred[0])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#2.Consider the following data set
+#Design a k-NN to assign a class label for the following.
+
+# k-NN for Color Classification
+
+import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
+
+# Dataset: [Brightness, Saturation]
+X = np.array([
+    [40, 20],
+    [50, 50],
+    [60, 90],
+    [10, 25],
+    [70, 70],
+    [60, 10],
+    [25, 80]
+])
+
+# Target: Color Class
+y = np.array(['Red', 'Blue', 'Blue', 'Red', 'Blue', 'Red', 'Blue'])
+
+# Create and train k-NN model
+knn = KNeighborsClassifier(n_neighbors=3)
+knn.fit(X, y)
+
+# New sample to classify
+new_sample = np.array([[20, 35]])
+
+# Predict color class
+pred = knn.predict(new_sample)
+print("Predicted Class:", pred)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#3.Apply k-NN on the iris data set
+
+# k-NN on Iris dataset
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+
+# Load dataset
+iris = load_iris()
+X = iris.data
+y = iris.target
+
+# Split into train and test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train model
+knn = KNeighborsClassifier(n_neighbors=3)
+knn.fit(X_train, y_train)
+
+# Test accuracy
+print("Accuracy:", knn.score(X_test, y_test))

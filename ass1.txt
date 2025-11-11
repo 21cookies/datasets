@@ -1,0 +1,162 @@
+import math
+print(math.floor(3.7))   # Output: 3
+print(math.floor(-2.3))  # Output: -3
+
+
+
+print(math.ceil(3.2))   # Output: 4
+print(math.ceil(-2.7))  # Output: -2
+
+
+print(math.sqrt(25))  # Output: 5.0
+print(math.sqrt(2))   # Output: 1.4142135623730951
+
+print(math.isqrt(25))  # Output: 5
+print(math.isqrt(26))  # Output: 5
+print(math.isqrt(0))   # Output: 0
+
+
+print(math.gcd(48, 18))  # Output: 6
+print(math.gcd(17, 5))   # Output: 1
+
+
+
+
+
+#b
+import numpy as np
+
+# Create an array
+arr = np.array([1, 2, 3, 4, 5])
+
+print("Array:", arr)
+print("ndim (Dimensions):", arr.ndim)
+print("shape:", arr.shape)
+print("size (Total elements):", arr.size)
+
+# Useful methods
+print("Sum:", arr.sum())
+print("Mean:", arr.mean())
+print("Sorted:", np.sort(arr))
+print("Sine values:", np.sin(arr))
+
+
+
+
+#c
+
+import numpy as np
+
+# Create a matrix
+matrix = np.array([[2, 2],
+                   [1, 3]])
+
+# Determinant
+det = np.linalg.det(matrix)
+print(f"Determinant: {det}")
+
+# Eigenvalues and Eigenvectors
+eigenvalues, eigenvectors = np.linalg.eig(matrix)
+print("Eigenvalues:", eigenvalues)
+print("Eigenvectors:\n", eigenvectors)
+
+
+
+
+
+#d
+
+import numpy as np
+
+# 1D list
+my_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+# Convert to NumPy array
+np_array = np.array(my_list)
+print("Original 1D Array:", np_array)
+print("Shape:", np_array.shape)
+
+# Reshape to 2D
+matrix_2d = np_array.reshape(3, 4)
+print("\n2D Matrix:\n", matrix_2d)
+print("Shape:", matrix_2d.shape)
+
+# Reshape to 3D
+matrix_3d = np_array.reshape(2, 2, 3)
+print("\n3D Matrix:\n", matrix_3d)
+print("Shape:", matrix_3d.shape)
+
+
+
+
+
+
+
+#e
+
+import numpy as np
+
+# Create Generator instance
+rng = np.random.default_rng(seed=42)
+
+# Generate random values
+random_floats = rng.random((2, 3))
+random_integers = rng.integers(1, 11, size=(3, 3))
+normal_values = rng.normal(0, 1, size=(2, 2))
+
+print("Random Floats (0-1):\n", random_floats)
+print("\nRandom Integers (1–10):\n", random_integers)
+print("\nNormal Distribution Values:\n", normal_values)
+
+# Matrix operations
+matrix_a = np.array([[1, 2, 3],
+                     [4, 5, 6],
+                     [7, 8, 9]])
+matrix_b = np.array([[9, 8, 7],
+                     [6, 5, 4],
+                     [3, 2, 1]])
+
+print("\nMatrix Multiplication:\n", matrix_a @ matrix_b)
+print("\nTranspose of A:\n", matrix_a.T)
+print("\nElement-wise Sum:\n", matrix_a + matrix_b)
+
+
+
+
+
+
+#f
+
+import numpy as np
+from scipy import linalg
+
+matrix_A = np.array([[3, 1, 4],
+                     [1, 5, 9],
+                     [2, 6, 5]])
+
+determinant_A = linalg.det(matrix_A)
+print("Matrix A:\n", matrix_A)
+print("\nDeterminant of A:", determinant_A)
+
+
+
+
+
+
+#g 
+
+import numpy as np
+from scipy.linalg import eig
+
+# Define a matrix
+A = np.array([[2, 1],
+              [1, 2]])
+
+# Calculate eigenvalues and eigenvectors
+eigenvalues, eigenvectors = eig(A)
+
+print("Eigenvalues:", eigenvalues)
+print("Eigenvectors:\n", eigenvectors)
+
+
+

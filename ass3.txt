@@ -1,0 +1,193 @@
+#a 
+
+import pandas as pd
+
+data = {'Name': ['Alice', 'Bob', 'Charlie'],
+        'Age': [25, 30, 22],
+        'City': ['New York', 'London', 'Paris']}
+
+df = pd.DataFrame(data)
+print(df)
+
+
+
+
+
+import pandas as pd
+
+data = [['Alice', 25, 'New York'],
+        ['Bob', 30, 'London'],
+        ['Charlie', 22, 'Paris']]
+
+df = pd.DataFrame(data, columns=['Name', 'Age', 'City'])
+print(df)
+
+
+
+
+
+
+import pandas as pd
+
+data = [{'Name': 'Alice', 'Age': 25, 'City': 'New York'},
+        {'Name': 'Bob', 'Age': 30, 'City': 'London'},
+        {'Name': 'Charlie', 'Age': 22, 'City': 'Paris'}]
+
+df = pd.DataFrame(data)
+print(df)
+
+
+
+
+
+import pandas as pd
+
+# From CSV
+df_csv = pd.read_csv('data.csv')
+print(df_csv.head())
+
+# From Excel
+df_excel = pd.read_excel('data.xlsx')
+print(df_excel.head())
+
+
+
+
+import pandas as pd
+import numpy as np
+
+data = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+df_np = pd.DataFrame(data, columns=['ColA', 'ColB', 'ColC'])
+print(df_np)
+
+
+
+
+import pandas as pd
+
+df = pd.read_csv('/content/drive/MyDrive/your_folder/your_file.csv')
+print(df.head())
+
+
+from sklearn.datasets import load_iris, load_digits, load_diabetes
+
+# Iris Dataset
+iris = load_iris()
+X_iris, y_iris = iris.data, iris.target
+print("Iris Data:\n", X_iris[:5])
+
+# Digits Dataset
+digits = load_digits()
+X_digits, y_digits = digits.data, digits.target
+print("\nDigits Data:\n", X_digits[:5])
+
+# Diabetes Dataset
+diabetes = load_diabetes()
+X_diabetes, y_diabetes = diabetes.data, diabetes.target
+print("\nDiabetes Data:\n", X_diabetes[:5])
+
+
+from google.colab import files
+
+uploaded = files.upload()
+
+
+
+#b) Write a python program to compute Mean, Median, Mode, Variance, Standard Deviation using Datasets
+
+import pandas as pd
+from scipy import stats
+
+# Sample dataset
+data = {'Marks': [80, 85, 90, 75, 95, 85, 80]}
+df = pd.DataFrame(data)
+
+mean = df['Marks'].mean()
+median = df['Marks'].median()
+mode = df['Marks'].mode()[0]
+variance = df['Marks'].var()
+std_dev = df['Marks'].std()
+
+print("Mean:", mean)
+print("Median:", median)
+print("Mode:", mode)
+print("Variance:", variance)
+print("Standard Deviation:", std_dev)
+
+
+
+
+
+
+
+#c)Demonstrate various data pre-processing techniques for a given dataset. Write a python program to compute
+#i. Reshaping the data
+#ii.Filtering the data
+#iii.Merging the data
+#iv.Handling the missing values in datasets
+#v.Feature Normalization: Min-max normalization, Scalar Normalization etc.
+
+import pandas as pd
+import numpy as np
+
+data = {'Name': ['Alice', 'Bob', 'Charlie', 'David', np.nan],
+        'Age': [25, 30, np.nan, 35, 40],
+        'Salary': [50000, 60000, 55000, np.nan, 65000],
+        'City': ['New York', 'London', 'Paris', 'Berlin', 'Tokyo']}
+
+df = pd.DataFrame(data)
+print("Original Data:\n", df)
+
+
+
+
+# Using pivot_table for reshaping
+reshaped = df.pivot_table(values='Salary', index='City')
+print("\nReshaped Data:\n", reshaped)
+
+
+# Filter rows where Age > 30
+filtered = df[df['Age'] > 30]
+print("\nFiltered Data (Age > 30):\n", filtered)
+
+
+data1 = {'ID': [1, 2, 3], 'Name': ['Alice', 'Bob', 'Charlie']}
+data2 = {'ID': [1, 2, 3], 'Salary': [50000, 60000, 55000]}
+
+df1 = pd.DataFrame(data1)
+df2 = pd.DataFrame(data2)
+
+merged = pd.merge(df1, df2, on='ID')
+print("\nMerged Data:\n", merged)
+
+
+
+
+# Fill missing values with mean
+df['Age'].fillna(df['Age'].mean(), inplace=True)
+df['Salary'].fillna(df['Salary'].mean(), inplace=True)
+
+# Drop rows with missing names
+df.dropna(subset=['Name'], inplace=True)
+
+print("\nAfter Handling Missing Values:\n", df)
+
+
+
+from sklearn.preprocessing import MinMaxScaler
+
+scaler = MinMaxScaler()
+df[['Age', 'Salary']] = scaler.fit_transform(df[['Age', 'Salary']])
+
+print("\nAfter Min-Max Normalization:\n", df)
+
+
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+df[['Age', 'Salary']] = scaler.fit_transform(df[['Age', 'Salary']])
+
+print("\nAfter Z-score Normalization:\n", df)
+
+
+

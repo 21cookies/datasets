@@ -1,0 +1,28 @@
+import pandas as pd
+
+# Load dataset
+
+data = pd.read_csv("/diabetes.csv")
+
+X = data.iloc[:, :-1].values
+y = data.iloc[:, -1].values
+
+
+threshold = y.mean()
+y_positive = (y > threshold).astype(int)
+
+for i in range(len(y_positive)):
+    if y_positive[i] == 1:
+        hypothesis = X[i].tolist()
+        print(f"Initial hypothesis (from first positive example): {hypothesis}")
+        break
+
+# Find-S algorithm with step-by-step output
+for i in range(len(y_positive)):
+    if y_positive[i] == 1:
+        for j in range(len(hypothesis)):
+            if hypothesis[j] != X[i][j]:
+                hypothesis[j] = '?'
+        print(f"Hypothesis after processing example {i+1}: {hypothesis}")
+
+print("\nFinal hypothesis:", hypothesis)

@@ -1,0 +1,117 @@
+#a) Create a Series using pandas and display 
+
+import pandas as pd
+
+# Creating a Series
+data = [10, 20, 30, 40, 50]
+series = pd.Series(data)
+
+# Display the Series
+print("Pandas Series:\n", series)
+
+
+
+
+
+#b) Access the index and the values of our Series
+
+# Accessing index and values
+
+print("Series Index:", series.index)
+print("Series Values:", series.values)
+
+
+
+
+
+#c) Compare an array using Numpy with a series using pandas
+
+import numpy as np
+
+# Creating a NumPy array
+array = np.array([10, 20, 30, 40, 50])
+
+print("NumPy Array:", array)
+print("Pandas Series:\n", series)
+
+# Comparing
+comparison = (array == series)
+print("Comparison Result:", comparison)
+
+
+
+#d) Define Series objects with individual indices
+
+# Defining custom indices
+
+series2 = pd.Series([100, 200, 300], index=['A', 'B', 'C'])
+print("Series with Custom Index:\n", series2)
+
+
+
+
+
+#e) Access single value of a series
+
+# Access by index label
+
+print("Value at index 'B':", series2['B'])
+
+# Access by position
+print("Value at position 1:", series2.iloc[1])
+
+
+
+
+
+#f) Load datasets in a Data frame variable using pandas
+# Usage of different methods in Matplotlib.
+
+# Creating a sample dataset using dictionary
+
+data = {
+    'Name': ['Alice', 'Bob', 'Charlie'],
+    'Age': [24, 27, 22],
+    'Marks': [88, 92, 85]
+}
+
+# Loading into a DataFrame
+df = pd.DataFrame(data)
+print("DataFrame:\n", df)
+
+
+import matplotlib.pyplot as plt
+
+# Data
+
+x = [1, 2, 3, 4, 5]
+y = [10, 20, 15, 25, 30]
+
+# Line Plot
+plt.plot(x, y, label="Line Plot", marker='o')
+plt.title("Line Plot Example")
+plt.xlabel("X-axis")
+plt.ylabel("Y-axis")
+plt.legend()
+plt.show()
+
+# Bar Plot
+plt.bar(x, y, color='green')
+plt.title("Bar Chart Example")
+plt.xlabel("X-axis")
+plt.ylabel("Y-axis")
+plt.show()
+
+# Scatter Plot
+plt.scatter(x, y, color='red')
+plt.title("Scatter Plot Example")
+plt.xlabel("X-axis")
+plt.ylabel("Y-axis")
+plt.show()
+
+# Pie Chart
+labels = ['A', 'B', 'C', 'D', 'E']
+plt.pie(y, labels=labels, autopct='%1.1f%%')
+plt.title("Pie Chart Example")
+plt.show()
+
